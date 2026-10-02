@@ -31,6 +31,8 @@ export function sanitize(raw: unknown): AppData {
     if (typeof c.name === "string") custom.name = c.name.slice(0, 30);
     if (typeof c.emoji === "string") custom.emoji = c.emoji.slice(0, 8);
     if (typeof c.unit === "string") custom.unit = c.unit.slice(0, 20);
+    if (typeof c.low === "string") custom.low = c.low.slice(0, 120);
+    if (typeof c.high === "string") custom.high = c.high.slice(0, 120);
     if (c.kind === "scale" || c.kind === "count" || c.kind === "check") custom.kind = c.kind as CustomKind;
     if (isNum(c.max) && c.max >= 1 && c.max <= 100) custom.max = Math.round(c.max);
   }

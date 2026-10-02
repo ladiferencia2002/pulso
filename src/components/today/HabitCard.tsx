@@ -46,6 +46,7 @@ export function HabitCard({
           <div>
             <h2 className="font-semibold text-white">{def.name}</h2>
             <p className="text-xs text-slate-500">{goalLabel(def)}</p>
+            {def.hint?.about && <p className="mt-0.5 text-xs text-slate-400">{def.hint.about}</p>}
           </div>
         </div>
         <div className="text-right">
@@ -102,6 +103,23 @@ export function HabitCard({
             </button>
           ))}
         </div>
+      )}
+
+      {def.kind === "scale" && def.hint && (def.hint.low || def.hint.high) && (
+        <dl className="mt-3 space-y-1 text-xs text-slate-400">
+          {def.hint.low && (
+            <div className="flex gap-2">
+              <dt className="w-10 shrink-0 font-semibold text-slate-200">1 =</dt>
+              <dd>{def.hint.low}</dd>
+            </div>
+          )}
+          {def.hint.high && (
+            <div className="flex gap-2">
+              <dt className="w-10 shrink-0 font-semibold text-slate-200">10 =</dt>
+              <dd>{def.hint.high}</dd>
+            </div>
+          )}
+        </dl>
       )}
 
       {def.kind === "check" && (

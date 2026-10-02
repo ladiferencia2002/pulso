@@ -159,6 +159,32 @@ export default function SettingsPage() {
             </label>
           </div>
         )}
+        {data.custom.kind === "scale" && (
+          <div className="space-y-3">
+            <label className="block space-y-1 text-xs text-slate-400">
+              ¿Qué significa un 1?
+              <input
+                type="text"
+                value={data.custom.low}
+                maxLength={120}
+                placeholder="Ej.: muy mal, agotado…"
+                onChange={(e) => setCustom(setData, { low: e.target.value })}
+                className={field}
+              />
+            </label>
+            <label className="block space-y-1 text-xs text-slate-400">
+              ¿Qué significa un 10?
+              <input
+                type="text"
+                value={data.custom.high}
+                maxLength={120}
+                placeholder="Ej.: perfecto, lleno de energía…"
+                onChange={(e) => setCustom(setData, { high: e.target.value })}
+                className={field}
+              />
+            </label>
+          </div>
+        )}
         <p className="text-xs text-slate-500">
           Si cambias cómo lo mides, los valores ya guardados se conservan pero pueden dejar de tener sentido.
         </p>

@@ -10,7 +10,7 @@ App móvil de seguimiento de hábitos de salud: **sueño, piel, dieta** y un **c
 
 ```
                     ┌───────────────────────── barra de navegación ─────────────────────────┐
-                    │   ✅ Hoy          📈 Mes          ⚖️ Comparar          ⚙️ Ajustes       │
+                    │  ✅ Hoy     📈 Mes     🗓️ Año     ⚖️ Comparar     ⚙️ Ajustes         │
                     └────────────────────────────────────────────────────────────────────────┘
 
  ✅ HOY (pantalla principal)              📈 MES                        ⚖️ COMPARAR
@@ -31,6 +31,7 @@ App móvil de seguimiento de hábitos de salud: **sueño, piel, dieta** y un **c
 ```
 
 - **Hoy:** acceso rápido a los 4 hábitos. Anillo de progreso del día, racha de días completos (los 4 registrados), tira de la semana y mensaje motivador. Al cerrar el mes aparece un aviso para descargar el PDF.
+- **Año:** el año completo en puntos, un calendario por hábito (cada punto es un día, de lunes a domingo, con los meses arriba). El color indica cómo te fue y la leyenda lo explica; toca un punto para ver el día. Para el sueño usa los tramos `<6 h · 6 h · 7 h · 8 h · 9 h+`; para la piel, un color por cada valor del 1 al 10; para dieta y el cuarto hábito, el avance hacia la meta.
 - **Mes:** una gráfica por hábito (área para horas, línea para escalas, barras para cantidades y sí/no) con línea de meta, promedio, mejor día, días registrados, % de cumplimiento y variación frente al mes anterior.
 - **Comparar:** eliges dos meses cualesquiera; cada hábito se dibuja con ambos meses superpuestos (continua vs. punteada) y la diferencia de promedios.
 - **Ajustes:** metas diarias, configuración del cuarto hábito, copia de seguridad (exportar/importar JSON) y borrado de datos.
@@ -43,6 +44,15 @@ App móvil de seguimiento de hábitos de salud: **sueño, piel, dieta** y un **c
 | ✨ Piel | escala | 1–10 | 7 |
 | 🥗 Dieta | contador de comidas saludables | 0–8 | 4 |
 | ⭐ Libre (por defecto 💧 Agua) | contador, escala 1–10 o sí/no | configurable | configurable |
+
+### Qué es "Piel" y qué significan el 1 y el 10
+
+Piel es una valoración diaria de **cómo está tu piel hoy**: brotes, rojeces, irritación, hidratación y brillo.
+
+- **1 =** muy mal: brotes o irritación fuerte, rojeces, muy seca o muy grasa.
+- **10 =** perfecta: limpia, calmada, hidratada y luminosa.
+
+Esta explicación aparece en *Hoy*, en la leyenda de *Año* y en el PDF. Si tu cuarto hábito es una escala de 1 a 10, defines qué significan su 1 y su 10 en *Ajustes*.
 
 Un día "cumple" cuando el valor es **igual o mayor que la meta**. La app asume que más es mejor en todos los hábitos.
 
@@ -110,12 +120,13 @@ npm run preview    # sirve out/ en local
 
 ```
 src/
-  app/            page.tsx (Hoy) · mes/ · comparar/ · ajustes/ · layout.tsx · manifest.ts
-  components/     today/ (HabitCard, DayRing, WeekStrip, MonthEndBanner) · charts/ · nav/
+  app/            page.tsx (Hoy) · mes/ · anio/ · comparar/ · ajustes/ · layout.tsx · manifest.ts
+  components/     today/ (HabitCard, DayRing, WeekStrip, MonthEndBanner) · charts/ · year/ (YearHeatmap) · nav/
   lib/
     habits.ts       definiciones de hábitos, formato y metas
     clientStore.ts  persistencia y validación
     stats.ts        series mensuales, resúmenes, racha, mes pendiente de PDF
+    heat.ts         niveles de color del calendario anual
     chartSpec.ts    escala de ejes (compartida por la app y el PDF)
     pdfExport.ts    informe mensual en PDF
     useAppData.tsx  estado global + guardado automático

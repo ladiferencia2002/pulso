@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 const NAV_ITEMS = [
   { href: "/", label: "Hoy", emoji: "✅" },
   { href: "/mes", label: "Mes", emoji: "📈" },
+  { href: "/anio", label: "Año", emoji: "🗓️" },
   { href: "/comparar", label: "Comparar", emoji: "⚖️" },
   { href: "/ajustes", label: "Ajustes", emoji: "⚙️" },
 ] as const;

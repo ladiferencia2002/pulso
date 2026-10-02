@@ -2,6 +2,9 @@ export type HabitId = "sleep" | "skin" | "diet" | "custom";
 export type HabitKind = "hours" | "scale" | "count" | "check";
 export type CustomKind = Exclude<HabitKind, "hours">;
 
+// Explica una escala 1-10: qué se mide y qué significan sus extremos.
+export type HabitHint = { about?: string; low?: string; high?: string };
+
 export type HabitDef = {
   id: HabitId;
   name: string;
@@ -13,6 +16,7 @@ export type HabitDef = {
   step: number;
   goal: number;
   color: string;
+  hint?: HabitHint;
 };
 
 export type CustomCfg = {
@@ -21,12 +25,20 @@ export type CustomCfg = {
   kind: CustomKind;
   unit: string;
   max: number;
+  low: string; // qué significa un 1 (solo escala)
+  high: string; // qué significa un 10 (solo escala)
 };
 
 export const HABIT_IDS: HabitId[] = ["sleep", "skin", "diet", "custom"];
 
 export const DEFAULT_GOALS: Record<HabitId, number> = { sleep: 8, skin: 7, diet: 4, custom: 8 };
-export const DEFAULT_CUSTOM: CustomCfg = { name: "Agua", emoji: "💧", kind: "count", unit: "vasos", max: 20 };
+export const DEFAULT_CUSTOM: CustomCfg = { name: "Agua", emoji: "💧", kind: "count", unit: "vasos", max: 20, low: "", high: "" };
+
+export const SKIN_HINT: HabitHint = {
+  about: "Cómo está tu piel hoy: brotes, rojeces, irritación, hidratación y brillo.",
+  low: "Muy mal: brotes o irritación fuerte, rojeces, muy seca o muy grasa.",
+  high: "Perfecta: limpia, calmada, hidratada y luminosa.",
+};
 
 // Categorical slots 1-4 of the validated dark palette (see README).
 const COLORS: Record<HabitId, string> = {
@@ -46,7 +58,7 @@ export function buildHabits(goals: Record<HabitId, number>, custom: CustomCfg): 
 
   return [
     { id: "sleep", name: "Sueño", emoji: "😴", kind: "hours", unit: "h", min: 0, max: 14, step: 0.5, goal: clamp(goals.sleep, 0, 14), color: COLORS.sleep },
-    { id: "skin", name: "Piel", emoji: "✨", kind: "scale", unit: "", min: 1, max: 10, step: 1, goal: clamp(goals.skin, 1, 10), color: COLORS.skin },
+    { id: "skin", name: "Piel", emoji: "✨", kind: "scale", unit: "", min: 1, max: 10, step: 1, goal: clamp(goals.skin, 1, 10), color: COLORS.skin, hint: SKIN_HINT },
     { id: "diet", name: "Dieta", emoji: "🥗", kind: "count", unit: "comidas", min: 0, max: 8, step: 1, goal: clamp(goals.diet, 0, 8), color: COLORS.diet },
     {
       id: "custom",
@@ -56,6 +68,7 @@ export function buildHabits(goals: Record<HabitId, number>, custom: CustomCfg): 
       ...customDef,
       goal: custom.kind === "check" ? 1 : clamp(goals.custom, customDef.min, customDef.max),
       color: COLORS.custom,
+      hint: custom.kind === "scale" && (custom.low.trim() || custom.high.trim()) ? { low: custom.low.trim(), high: custom.high.trim() } : undefined,
     },
   ];
 }

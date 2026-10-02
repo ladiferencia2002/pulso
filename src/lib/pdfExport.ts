@@ -125,7 +125,17 @@ function drawHabitBlock(doc: jsPDF, y: number, def: HabitDef, series: SeriesPoin
     );
   }
 
-  drawChart(doc, MARGIN, y + 24, CONTENT_W, 30, series, def);
+  const hint = def.hint;
+  if (hint && (hint.low || hint.high)) {
+    doc.setFontSize(8);
+    doc.setTextColor(110);
+    const text = [hint.low && `1 = ${clean(hint.low)}`, hint.high && `10 = ${clean(hint.high)}`].filter(Boolean).join("   |   ");
+    const lines = doc.splitTextToSize(text, CONTENT_W - 5) as string[];
+    doc.text(lines.slice(0, 2), MARGIN + 5, y + 25);
+    drawChart(doc, MARGIN, y + 31, CONTENT_W, 23, series, def);
+  } else {
+    drawChart(doc, MARGIN, y + 24, CONTENT_W, 30, series, def);
+  }
 }
 
 function drawTable(doc: jsPDF, startY: number, defs: HabitDef[], seriesList: SeriesPoint[][], monthId: string) {
